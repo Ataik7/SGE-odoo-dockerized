@@ -66,8 +66,8 @@ function set_permissions_for_host() {
         - La correcta ejecución de los contenedores y persistencia de sus datos.
         - La correcta migración de los ficheros usados en los puntos de montaje a otros entornos.
 
-    Si los contenedores están en ejecución, vuelve a lanzar "$0" tras hacer "docker-compose down".
-    Si no, vuelve a lanzar "$0" tras hacer "docker-compose up -d".
+    Si los contenedores están en ejecución, vuelve a lanzar "$0" tras hacer "docker compose down".
+    Si no, vuelve a lanzar "$0" tras hacer "docker compose up -d".
 
 EOF
         # EOF debe ser una línea exacta sin caracteres delante o detrás @see sintaxis HEREDOC (<<)
@@ -95,9 +95,9 @@ function set_permissions() {
 function save_backup() {
     error="false"
     chmod o+rwx . || error="true"
-    if false && docker-compose ps -aq | grep . > /dev/null
+    if false && docker compose ps -aq | grep . > /dev/null
     then
-        echo "Hay contenedores en ejecución, ejecuta 'docker-compose down' antes de guardar un backup" >&2
+        echo "Hay contenedores en ejecución, ejecuta 'docker compose down' antes de guardar un backup" >&2
         error="true"
     else
         sed '1,/^volumes:/d' docker-compose.yml | tr -d ' :\r' | grep -v '^#' | while read -r volume; do
@@ -133,9 +133,9 @@ function restore_backup() {
     error="false"
     chmod o+rwx . || error="true"
     local selected_backup
-    if docker-compose ps -aq | grep . > /dev/null
+    if docker compose ps -aq | grep . > /dev/null
     then
-        echo "Hay contenedores en ejecución, ejecuta 'docker-compose down' antes de restaurar un backup" >&2
+        echo "Hay contenedores en ejecución, ejecuta 'docker compose down' antes de restaurar un backup" >&2
         error="true"
     elif ls $BACKUPS_CURRENT_DIR_ANY_HOST >& /dev/null
     then
